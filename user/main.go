@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/labstack/echo/v4"
 	"github.com/nats-io/nats.go"
 	"github.com/pooya/entity"
 )
@@ -15,19 +16,7 @@ type Server struct {
 	natConn *nats.Conn
 }
 
-func EchoHandler(writer http.ResponseWriter, request *http.Request) {
-	fmt.Println("something in here")
-
-	log.Println("handler")
-
-}
-
-func (nc *Server) AddExpenseHandler(writer http.ResponseWriter, request *http.Request) {
-	if request.Method != http.MethodPost {
-		http.Error(writer, "Only POST allowed", http.StatusMethodNotAllowed)
-		return
-	}
-
+func (nc *Server) AddExpenseHandler(c echo.Context) error{
 	fmt.Println("adding")
 
 	user := entity.User{
@@ -43,6 +32,8 @@ func (nc *Server) AddExpenseHandler(writer http.ResponseWriter, request *http.Re
 	}
 
 	log.Printf("adding ends")
+
+	return c.JSON(http.StatusOK, user)
 }
 
 func main() {
@@ -56,9 +47,8 @@ func main() {
 
 	srv := &Server{natConn: nc}
 
-	http.HandleFunc("/", EchoHandler)
+	e := echo.New()
+	e.POST("/add-expense", srv.AddExpenseHandler)
 
-	http.HandleFunc("/add-expense", srv.AddExpenseHandler)
-
-	http.ListenAndServe(":"+PORT, nil)
+	e.Start(":" + PORT)
 }
