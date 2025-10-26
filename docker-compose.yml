@@ -4,3 +4,18 @@ services:
     image: nats:latest
     ports:
       - "4222:4222"
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: "gold"
+      MYSQL_PASSWORD: "gold552"
+      MYSQL_ROOT_PASSWORD: "gold552"
+    ports:
+      - "3308:3306"
+    expose:
+      - "3306"
+    volumes:
+      - my-db:/var/lib/mysql
+volumes:
+  my-db:

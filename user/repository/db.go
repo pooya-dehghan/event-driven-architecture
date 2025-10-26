@@ -12,7 +12,7 @@ type Repo struct {
 }
 
 func NewRepo (database *gorm.DB) *Repo{
-	dsn := "root:changeme@tcp"
+	dsn := "root:gold552@tcp(127.0.0.1:3308)/gold?charset=utf8mb4&parseTime=True&loc=Local"
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
