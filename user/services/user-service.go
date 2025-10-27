@@ -14,6 +14,10 @@ type UserService struct {
 	NatConn *nats.Conn
 }
 
+func New(repo *repository.Repo) (UserService, error) {
+	return UserService{Repo: repo}, nil
+}
+
 func (s *UserService) AddExpenseHandler() (entity.User, error) {
 	fmt.Println("adding")
 

@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/labstack/echo/v4"
@@ -14,7 +15,7 @@ type Server struct {
 	userService services.UserService
 }
 
-func (s Server) NewServer(userSrv services.UserService) Server {
+func NewServer(userSrv services.UserService) Server {
 
 	server := Server{
 		userService: userSrv,
@@ -35,5 +36,5 @@ func (s Server) Serve() {
 	e := echo.New()
 	e.POST("/add-expense", s.addExpense)
 
-	e.Start(":" + PORT)
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", PORT)))
 }
