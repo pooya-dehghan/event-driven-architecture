@@ -14,7 +14,7 @@ type UserService struct {
 	NatConn *nats.Conn
 }
 
-func New(repo *repository.Repo) (UserService, error) {
+func New(repo repository.Repo) (UserService, error) {
 	return UserService{Repo: repo}, nil
 }
 
