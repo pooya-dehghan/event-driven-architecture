@@ -9,7 +9,7 @@ import (
 	"github.com/pooya/services"
 )
 
-const PORT = "7366"
+const PORT = ":7366"
 
 type Server struct {
 	userService services.UserService
@@ -36,5 +36,5 @@ func (s Server) Serve() {
 	e := echo.New()
 	e.POST("/add-expense", s.addExpense)
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", PORT)))
+	e.Logger.Fatal(e.Start(fmt.Sprintf("%s", PORT)))
 }

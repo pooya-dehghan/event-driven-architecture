@@ -1,10 +1,9 @@
 package repository
 
 import (
-	"context"
+	"fmt"
 
 	"github.com/pooya/entity"
-	"gorm.io/gorm"
 )
 
 func (r *Repo) AddExpense(amount int) error {
@@ -13,11 +12,9 @@ func (r *Repo) AddExpense(amount int) error {
 		PhoneNumber: "09202230930",
 	}
 
-	ctx := context.Background()
-	err := gorm.G[entity.User](r.db).Create(ctx, &user)
-
-	if err != nil {
-		return err
+	if err := r.db.Create(&user).Error; err != nil {
+		fmt.Println("user creation had a problem", err)
 	}
+
 	return nil
 }

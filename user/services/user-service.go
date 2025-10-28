@@ -29,6 +29,8 @@ func (s *UserService) AddExpenseHandler() (entity.User, error) {
 
 	log.Println(user)
 
+	s.Repo.AddExpense(100)
+
 	if err := s.NatConn.Publish("add-expense", []byte("New Expense Added")); err != nil {
 		log.Println("Error publishing to NATS:", err)
 	}
