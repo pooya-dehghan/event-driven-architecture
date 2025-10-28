@@ -14,15 +14,14 @@ type UserService struct {
 	NatConn *nats.Conn
 }
 
-func New(repo repository.Repo) (UserService, error) {
-	return UserService{Repo: repo}, nil
+func New(repo repository.Repo, natConn *nats.Conn) (UserService, error) {
+	return UserService{Repo: repo, NatConn: natConn}, nil
 }
 
 func (s *UserService) AddExpenseHandler() (entity.User, error) {
 	fmt.Println("adding")
 
 	user := entity.User{
-		Id:          "1",
 		Name:        "pooya",
 		PhoneNumber: "09202230930",
 	}

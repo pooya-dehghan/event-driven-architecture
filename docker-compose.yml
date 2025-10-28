@@ -17,5 +17,19 @@ services:
       - "3306"
     volumes:
       - my-db:/var/lib/mysql
+
+  mongo:
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: gold552
+      MONGO_INITDB_DATABASE: gold
+    ports:
+      - "27019:27017"
+    volumes:
+      - mongo-data:/data/db
+
 volumes:
   my-db:
+  mongo-data:
