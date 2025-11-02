@@ -6,6 +6,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/expse/entity"
 	"github.com/nats-io/nats.go"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -15,29 +16,16 @@ type Server struct {
 	natConn *nats.Conn
 }
 
-func main() {
-	nc, err := nats.Connect(nats.DefaultURL)
-	defer nc.Drain()
-	if err != nil {
-		fmt.Println(err)
-	}
+func ConnectingToMongoDB() (*mongo.Client, error) {
+	uri := "mongodb://root:gold552@localhost:27019/gold?authSource=admin"
 
-	log.Println("nats connection was made")
-
-	srv := &Server{
-		natConn: nc,
-	}
-
-	uri := "mongodb://root:gold552@localhost:27017/gold?authSource=admin"
-
-	// Set client options
 	clientOpts := options.Client().ApplyURI(uri)
 
-	// Connect to MongoDB
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 
 	client, err := mongo.Connect(ctx, clientOpts)
+
 	if err != nil {
 		log.Fatal("Error connecting to MongoDB:", err)
 	}
@@ -46,13 +34,42 @@ func main() {
 		log.Fatal("Could not ping MongoDB:", err)
 	}
 
-	fmt.Println("✅ Connected to MongoDB!")
+	fmt.Println("Connected to MongoDB!")
 
-	// Access the database and collection
 	db := client.Database("gold")
-	usersCollection := db.Collection("users")
+	expenseColl := db.Collection("expense")
 
-	//usersCollection.
+	expense := entity.Expense{
+		UserId: "1",
+		Desc:   "this expense was to get a pizza",
+		Amount: 10000,
+	}
+
+	res, err := expenseColl.InsertOne(ctx, expense)
+
+	if err != nil {
+		fmt.Println("could not insert expense")
+	}
+
+	fmt.Println("res***: ", res)
+
+	return client, nil
+}
+
+func main() {
+	nc, err := nats.Connect(nats.DefaultURL)
+	defer nc.Drain()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	ConnectingToMongoDB()
+	log.Println("nats connection was made")
+
+	srv := &Server{
+		natConn: nc,
+	}
 
 	srv.natConn.Subscribe("add-expense", func(msg *nats.Msg) {
 		log.Println("hi i was called")
