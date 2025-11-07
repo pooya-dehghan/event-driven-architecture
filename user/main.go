@@ -10,10 +10,7 @@ import (
 	"github.com/pooya/services"
 )
 
-func main() {
-
-	repo := repository.NewRepo()
-
+func makeNatsConnection() (*nats.Conn, error) {
 	nc, err := nats.Connect(nats.DefaultURL)
 	defer nc.Drain()
 	if err != nil {
@@ -22,6 +19,13 @@ func main() {
 
 	log.Println("nats connection was made")
 
+	return nc, nil
+}
+
+func main() {
+
+	repo := repository.NewRepo()
+	nc, err := makeNatsConnection()
 	userService, err := services.New(repo, nc)
 
 	if err != nil {
