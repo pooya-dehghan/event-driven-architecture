@@ -6,10 +6,9 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/nats-io/nats.go"
+	"github.com/pooya/config"
 	"github.com/pooya/services"
 )
-
-const PORT = ":7366"
 
 type Server struct {
 	userService services.UserService
@@ -25,6 +24,8 @@ func NewServer(userSrv services.UserService) Server {
 }
 
 func (s Server) Serve() {
+	cfg := config.Load("config.yml")
+
 	nc, err := nats.Connect(nats.DefaultURL)
 
 	if err != nil {
@@ -36,5 +37,5 @@ func (s Server) Serve() {
 	e := echo.New()
 	e.POST("/add-expense", s.addExpense)
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf("%s", PORT)))
+	e.Logger.Fatal(e.Start(fmt.Sprintf("%s", cfg.UserMicroservicePort.Port)))
 }
