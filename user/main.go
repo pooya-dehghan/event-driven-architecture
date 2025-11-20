@@ -7,7 +7,7 @@ import (
 	"github.com/nats-io/nats.go"
 	httpserver "github.com/pooya/delivery/http-server"
 	"github.com/pooya/repository"
-	"github.com/pooya/services"
+	userservice "github.com/pooya/services"
 )
 
 func makeNatsConnection() (*nats.Conn, error) {
@@ -25,8 +25,14 @@ func makeNatsConnection() (*nats.Conn, error) {
 func main() {
 
 	repo := repository.NewRepo()
+
 	nc, err := makeNatsConnection()
-	userService, err := services.New(repo, nc)
+
+	if err != nil {
+		fmt.Errorf("nat did not connect")
+	}
+
+	userService, err := userservice.New(repo, nc)
 
 	if err != nil {
 		fmt.Errorf("something went wrong")

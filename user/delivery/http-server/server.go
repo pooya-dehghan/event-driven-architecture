@@ -5,19 +5,20 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/nats-io/nats.go"
 	"github.com/pooya/config"
-	"github.com/pooya/services"
+	userhandler "github.com/pooya/delivery/http-server/user-handler"
+	userservice "github.com/pooya/services"
 )
 
 type Server struct {
-	userService services.UserService
+	userHandler userhandler.Handler
 }
 
-func NewServer(userSrv services.UserService) Server {
-
+func NewServer(userService userservice.Service) Server {
 	server := Server{
-		userService: userSrv,
+		userHandler: userhandler.New(userService),
 	}
 
 	return server
@@ -35,7 +36,11 @@ func (s Server) Serve() {
 	defer nc.Drain()
 
 	e := echo.New()
-	e.POST("/add-expense", s.addExpense)
+
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
+
+	s.userHandler.SetUserRoute(e)
 
 	e.Logger.Fatal(e.Start(fmt.Sprintf("%s", cfg.UserMicroservicePort.Port)))
 }

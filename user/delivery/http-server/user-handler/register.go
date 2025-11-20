@@ -1,4 +1,4 @@
-package httpserver
+package userhandler
 
 import (
 	"fmt"
@@ -7,12 +7,11 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-func (s Server) addExpense(c echo.Context) error {
-	resp, err := s.userService.AddExpenseHandler()
+func (h Handler) register(c echo.Context) error {
+	resp, err := h.userSvc.AddExpenseHandler()
 	if err != nil {
 		return fmt.Errorf("expense did not add")
 	}
 
 	return c.JSON(http.StatusOK, resp)
-
 }

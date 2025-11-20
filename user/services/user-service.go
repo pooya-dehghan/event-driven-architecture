@@ -1,4 +1,4 @@
-package services
+package userservice
 
 import (
 	"fmt"
@@ -9,16 +9,16 @@ import (
 	"github.com/pooya/repository"
 )
 
-type UserService struct {
+type Service struct {
 	Repo    repository.Repo
 	NatConn *nats.Conn
 }
 
-func New(repo repository.Repo, natConn *nats.Conn) (UserService, error) {
-	return UserService{Repo: repo, NatConn: natConn}, nil
+func New(repo repository.Repo, natConn *nats.Conn) (Service, error) {
+	return Service{Repo: repo, NatConn: natConn}, nil
 }
 
-func (s *UserService) AddExpenseHandler() (entity.User, error) {
+func (s *Service) AddExpenseHandler() (entity.User, error) {
 	fmt.Println("adding")
 
 	user := entity.User{
