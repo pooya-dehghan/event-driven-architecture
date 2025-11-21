@@ -5,6 +5,7 @@ import (
 	"log"
 
 	"github.com/nats-io/nats.go"
+	"github.com/pooya/config"
 	httpserver "github.com/pooya/delivery/http-server"
 	"github.com/pooya/repository"
 	userservice "github.com/pooya/services"
@@ -23,24 +24,23 @@ func makeNatsConnection() (*nats.Conn, error) {
 }
 
 func main() {
+	cfg := config.Load("config.yml")
 
-	repo := repository.NewRepo()
+	repo := repository.NewRepo(&cfg.MysqlDatabase)
 
 	nc, err := makeNatsConnection()
 
 	if err != nil {
-		fmt.Errorf("nat did not connect")
+		panic("something happend on init")
 	}
 
 	userService, err := userservice.New(repo, nc)
 
-	if err != nil {
-		fmt.Errorf("something went wrong")
-
-		return
-	}
-
-	server := httpserver.NewServer(userService)
+	server := httpserver.NewServer(userService, cfg)
 
 	server.Serve()
+
+	if err != nil {
+		panic("something happend on init")
+	}
 }

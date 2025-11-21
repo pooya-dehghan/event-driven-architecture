@@ -4,17 +4,21 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/pooya/config"
 	"github.com/pooya/entity"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
 
 type Repo struct {
-	db *gorm.DB
+	db     *gorm.DB
+	config *config.MysqlDatabase
 }
 
-func NewRepo() Repo {
-	dsn := "root:gold552@tcp(127.0.0.1:3308)/gold?charset=utf8mb4&parseTime=True&loc=Local"
+func NewRepo(config *config.MysqlDatabase) Repo {
+	dsn := fmt.Sprintf("root:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", config.DatabasePass, config.Host, config.Port, config.DatabaseName)
+
+	fmt.Println("dsn %v", dsn)
 
 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
