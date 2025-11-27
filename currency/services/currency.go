@@ -10,15 +10,16 @@ type Service struct {
 	repo *repository.Repo
 }
 
-func NewService(expenseRepo *repository.Repo) *Service {
+func NewService(currencyRepo *repository.Repo) *Service {
 	srv := &Service{
-		repo: expenseRepo,
+		repo: currencyRepo,
 	}
 
 	return srv
 }
 
 func (s *Service) CreateCurrencyRequest() error {
+
 	err := s.repo.CreateCurrencyRequest()
 
 	if err != nil {

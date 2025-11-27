@@ -7,6 +7,6 @@ type MysqlConfig struct {
 	Host         string `koanf:"host"`
 }
 
-type UserConfig struct {
+type CurrencyConfig struct {
 	MysqlConfig MysqlConfig `koanf:"mysql_config"`
 }
