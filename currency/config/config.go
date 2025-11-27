@@ -1,10 +1,6 @@
 package config
 
-type HttpServer struct {
-	Port string `koanf:"port"`
-}
-
-type MysqlDatabase struct {
+type MysqlConfig struct {
 	Port         string `koanf:"port"`
 	DatabaseName string `koanf:"database_name"`
 	DatabasePass string `koanf:"database_pass"`
@@ -12,6 +8,5 @@ type MysqlDatabase struct {
 }
 
 type UserConfig struct {
-	UserMicroservicePort HttpServer    `koanf:"http_server"`
-	MysqlDatabase        MysqlDatabase `koanf:"mysql_database"`
+	MysqlConfig MysqlConfig `koanf:"mysql_config"`
 }
