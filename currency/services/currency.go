@@ -3,6 +3,7 @@ package services
 import (
 	"fmt"
 
+	"github.com/expse/params"
 	"github.com/expse/repository"
 )
 
@@ -18,9 +19,9 @@ func NewService(currencyRepo *repository.Repo) *Service {
 	return srv
 }
 
-func (s *Service) CreateCurrencyRequest() error {
+func (s *Service) CreateCurrencyRequest(params params.CurrencyRequestParams) error {
 
-	err := s.repo.CreateCurrencyRequest()
+	err := s.repo.CreateCurrencyRequest(params)
 
 	if err != nil {
 		fmt.Println("error on create expense service layer happened")

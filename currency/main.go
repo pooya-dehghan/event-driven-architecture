@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
@@ -35,6 +36,7 @@ func main() {
 	}
 
 	srv.natConn.Subscribe("add-currency-request", func(msg *nats.Msg) {
+		message := json.Unmarshal(msg.Data)
 		svc.CreateCurrencyRequest(msg)
 	})
 
