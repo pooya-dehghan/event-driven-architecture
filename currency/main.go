@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/expse/config"
+	"github.com/expse/params"
 	"github.com/expse/repository"
 	"github.com/expse/services"
 	"github.com/nats-io/nats.go"
@@ -35,9 +36,14 @@ func main() {
 		natConn: nc,
 	}
 
+	data := params.CurrencyRequestParams{}
+
 	srv.natConn.Subscribe("add-currency-request", func(msg *nats.Msg) {
-		message := json.Unmarshal(msg.Data)
-		svc.CreateCurrencyRequest(msg)
+		err := json.Unmarshal(msg.Data, &data)
+		if err != nil {
+			log.Printf("error aquired during unmarshal")
+		}
+		svc.CreateCurrencyRequest(data)
 	})
 
 	select {}
