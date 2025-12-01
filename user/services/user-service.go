@@ -1,11 +1,13 @@
 package userservice
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 
 	"github.com/nats-io/nats.go"
 	"github.com/pooya/entity"
+	"github.com/pooya/params"
 	"github.com/pooya/repository"
 )
 
@@ -18,7 +20,11 @@ func New(repo repository.Repo, natConn *nats.Conn) (Service, error) {
 	return Service{Repo: repo, NatConn: natConn}, nil
 }
 
-func (s *Service) AddExpenseHandler() (entity.User, error) {
+func (s *Service) Register() (entity.User, error) {
+	return entity.User{}, nil
+}
+
+func (s *Service) AddCurrencyRequestHandler(req params.CurrencyRequestParams) (entity.User, error) {
 	fmt.Println("adding")
 
 	user := entity.User{
@@ -30,7 +36,18 @@ func (s *Service) AddExpenseHandler() (entity.User, error) {
 
 	s.Repo.AddExpense(100)
 
-	if err := s.NatConn.Publish("add-expense", []byte("New Expense Added")); err != nil {
+	currencyReq := params.CurrencyRequestParams{
+		UserID:      req.UserID,
+		Price:       req.Price,
+		Description: req.Description,
+	}
+
+	data, err := json.Marshal(currencyReq)
+	if err != nil {
+		log.Println("Error marshaling currency request:", err)
+	}
+
+	if err := s.NatConn.Publish("add-currency-request", data); err != nil {
 		log.Println("Error publishing to NATS:", err)
 	}
 
