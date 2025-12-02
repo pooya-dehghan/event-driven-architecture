@@ -26,6 +26,7 @@ func (h Handler) currencyRequest(c echo.Context) error {
 	}
 
 	resp, err := h.userSvc.AddCurrencyRequestHandler(req)
+
 	if err != nil {
 		return fmt.Errorf("expense did not add")
 	}

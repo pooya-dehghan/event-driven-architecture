@@ -9,13 +9,13 @@ import (
 
 func (r *Repo) CreateCurrencyRequest(params params.CurrencyRequestParams) error {
 
-	var currencyReq = entity.CurrencyRequest{
+	var currency = entity.CurrencyRequest{
 		UserId:      params.UserID,
 		Price:       params.Price,
 		Description: params.Description,
 	}
 
-	if err := r.db.Create(&currencyReq).Error; err != nil {
+	if err := r.db.Create(&currency).Error; err != nil {
 		fmt.Println("user creation had a problem", err)
 	}
 
