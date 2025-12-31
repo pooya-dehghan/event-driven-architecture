@@ -36,14 +36,21 @@ func main() {
 		natConn: nc,
 	}
 
-	data := params.CurrencyRequestParams{}
+	type CurrencyReq struct {
+		UserID      string `json:"userID"`
+		Price       string `json:"price"`
+		Description string `json:description"`
+	}
 
 	srv.natConn.Subscribe("add-currency-request", func(msg *nats.Msg) {
-		err := json.Unmarshal(msg.Data, &data)
+		var req params.CurrencyRequestParams
+		err := json.Unmarshal(msg.Data, &req)
+
 		if err != nil {
-			log.Printf("error aquired during unmarshal")
+			fmt.Errorf("msg not compatible")
 		}
-		svc.CreateCurrencyRequest(data)
+
+		svc.CreateCurrencyRequest(req)
 	})
 
 	select {}
