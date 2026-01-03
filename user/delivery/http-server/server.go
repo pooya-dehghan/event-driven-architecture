@@ -2,11 +2,9 @@ package httpserver
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
-	"github.com/nats-io/nats.go"
 	"github.com/pooya/config"
 	userhandler "github.com/pooya/delivery/http-server/user-handler"
 	userservice "github.com/pooya/services"
@@ -26,14 +24,6 @@ func NewServer(userService userservice.Service) Server {
 
 func (s Server) Serve() {
 	cfg := config.Load("config.yml")
-
-	nc, err := nats.Connect(nats.DefaultURL)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer nc.Drain()
 
 	e := echo.New()
 

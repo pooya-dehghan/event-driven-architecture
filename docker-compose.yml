@@ -1,9 +1,19 @@
 version: "3.8"
 services:
-  nats:
-    image: nats:latest
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: unless-stopped
     ports:
-      - "4222:4222"
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # Management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - rabbitmq_net
   db:
     image: mysql:latest
     restart: always
@@ -18,18 +28,10 @@ services:
     volumes:
       - my-db:/var/lib/mysql
 
-  mongo:
-    image: mongo:latest
-    restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: gold552
-      MONGO_INITDB_DATABASE: gold
-    ports:
-      - "27019:27017"
-    volumes:
-      - mongo-data:/data/db
-
 volumes:
   my-db:
-  mongo-data:
+  rabbitmq_data:
+
+networks:
+  rabbitmq_net:
+    driver: bridge
