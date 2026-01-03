@@ -30,8 +30,11 @@ services:
 
 volumes:
   my-db:
+<<<<<<< HEAD
   rabbitmq_data:
 
 networks:
   rabbitmq_net:
     driver: bridge
+=======
+>>>>>>> 7c12c1bc53cc40feef221eec1a4b3014148fcab0

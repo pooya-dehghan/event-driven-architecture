@@ -7,6 +7,7 @@ import (
 
 	server "github.com/pooya/delivery/rabbit-mq"
 	"github.com/pooya/entity"
+	"github.com/pooya/params"
 	"github.com/pooya/repository"
 	"github.com/streadway/amqp"
 )
@@ -59,7 +60,11 @@ func (r *Service) SendExpense(user entity.User, rabbitmq_queue string) error {
 	return nil
 }
 
-func (s *Service) AddExpenseHandler() (entity.User, error) {
+func (s *Service) Register() (entity.User, error) {
+	return entity.User{}, nil
+}
+
+func (s *Service) AddCurrencyRequestHandler(req params.CurrencyRequestParams) (entity.User, error) {
 	fmt.Println("adding")
 
 	user := entity.User{

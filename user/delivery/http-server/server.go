@@ -12,18 +12,19 @@ import (
 
 type Server struct {
 	userHandler userhandler.Handler
+	config      *config.UserConfig
 }
 
-func NewServer(userService userservice.Service) Server {
+func NewServer(userService userservice.Service, cfg *config.UserConfig) Server {
 	server := Server{
 		userHandler: userhandler.New(userService),
+		config:      cfg,
 	}
 
 	return server
 }
 
 func (s Server) Serve() {
-	cfg := config.Load("config.yml")
 
 	e := echo.New()
 
@@ -32,5 +33,5 @@ func (s Server) Serve() {
 
 	s.userHandler.SetUserRoute(e)
 
-	e.Logger.Fatal(e.Start(fmt.Sprintf("%s", cfg.UserMicroservicePort.Port)))
+	e.Logger.Fatal(e.Start(fmt.Sprintf("%s", s.config.UserMicroservicePort.Port)))
 }

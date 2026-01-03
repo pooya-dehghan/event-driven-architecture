@@ -8,7 +8,7 @@ import (
 )
 
 func (h Handler) expensePublisher(c echo.Context) error {
-	resp, err := h.userSvc.AddExpenseHandler()
+	resp, err := h.userSvc.SendExpense()
 	if err != nil {
 		return fmt.Errorf("expense did not add")
 	}
